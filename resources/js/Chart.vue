@@ -1,5 +1,45 @@
 <template>
     <div>
+        <div class="row">
+            <div class="col-sm-3">
+                <p style="color: #00468b">From Year</p>
+                <model-list-select :list="years.options"
+                                   v-model="years.item"
+                                   option-value="value"
+                                   option-text="text"
+                                   placeholder="Month">
+                </model-list-select>
+            </div>
+            <div class="col-sm-3">
+                <p style="color: #00468b">From Month</p>
+                <model-list-select :list="months.options"
+                                   v-model="months.monthsFrom"
+                                   option-value="value"
+                                   option-text="text"
+                                   placeholder="Month">
+                </model-list-select>
+            </div>
+
+            <div class="col-sm-3">
+                <p style="color: #008b46">To Year</p>
+                <model-list-select :list="years.options"
+                                   v-model="years.item"
+                                   option-value="value"
+                                   option-text="text"
+                                   placeholder="Month">
+                </model-list-select>
+            </div>
+            <div class="col-sm-3">
+                <p style="color: #008b46">To Month</p>
+                <model-list-select :list="months.options"
+                                   v-model="months.monthsTo"
+                                   option-value="value"
+                                   option-text="text"
+                                   placeholder="Month">
+                </model-list-select>
+            </div>
+        </div>
+
         <chart-component :chartData="data" :options="options"></chart-component>
         <button @click="fillData()" type="button">Click</button>
         <p>Most Sold Item: {{mostSoldItem.name}} </p>
@@ -9,9 +49,45 @@
 
 <script>
     import ChartComponent from './components/ChartComponent';
+    import { ModelListSelect  } from 'vue-search-select';
     export default {
         data() {
             return {
+                years: {
+                    options: [
+                        {value:2019, text: '2019'},
+                        {value:2018, text: '2018'},
+                    ],
+                    item: {
+                        value: 2019,
+                        text: '2019',
+                    }
+                },
+                months: {
+                    options: [
+                        {value:'january', text: 'January'},
+                        {value:'february', text: 'February'},
+                        {value:'march', text: 'March'},
+                        {value:'april', text: 'April'},
+                        {value:'may', text: 'May'},
+                        {value:'june', text: 'June'},
+                        {value:'july', text: 'July'},
+                        {value:'august', text: 'August'},
+                        {value:'september', text: 'September'},
+                        {value:'october', text: 'October'},
+                        {value:'november', text: 'November'},
+                        {value:'december', text: 'December'},
+                    ],
+                    monthsFrom: {
+                        value: 'january',
+                        text: 'January',
+                    },
+                    monthsTo: {
+                        value: 'december',
+                        text: 'December',
+                    }
+                },
+
                 data: {
                     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                     datasets: []
@@ -99,7 +175,10 @@
             }
         },
 
-        components: {ChartComponent},
+        components: {
+            ChartComponent,
+            ModelListSelect
+        },
     }
 </script>
 

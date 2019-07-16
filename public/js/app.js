@@ -1698,6 +1698,48 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_ChartComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/ChartComponent */ "./resources/js/components/ChartComponent.vue");
+/* harmony import */ var vue_search_select__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-search-select */ "./node_modules/vue-search-select/publish/vue-search-select.js");
+/* harmony import */ var vue_search_select__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_search_select__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1708,9 +1750,70 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      years: {
+        options: [{
+          value: 2019,
+          text: '2019'
+        }, {
+          value: 2018,
+          text: '2018'
+        }],
+        item: {
+          value: 2019,
+          text: '2019'
+        }
+      },
+      months: {
+        options: [{
+          value: 'january',
+          text: 'January'
+        }, {
+          value: 'february',
+          text: 'February'
+        }, {
+          value: 'march',
+          text: 'March'
+        }, {
+          value: 'april',
+          text: 'April'
+        }, {
+          value: 'may',
+          text: 'May'
+        }, {
+          value: 'june',
+          text: 'June'
+        }, {
+          value: 'july',
+          text: 'July'
+        }, {
+          value: 'august',
+          text: 'August'
+        }, {
+          value: 'september',
+          text: 'September'
+        }, {
+          value: 'october',
+          text: 'October'
+        }, {
+          value: 'november',
+          text: 'November'
+        }, {
+          value: 'december',
+          text: 'December'
+        }],
+        monthsFrom: {
+          value: 'january',
+          text: 'January'
+        },
+        monthsTo: {
+          value: 'december',
+          text: 'December'
+        }
+      },
       data: {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         datasets: []
@@ -1793,7 +1896,8 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   components: {
-    ChartComponent: _components_ChartComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
+    ChartComponent: _components_ChartComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
+    ModelListSelect: vue_search_select__WEBPACK_IMPORTED_MODULE_1__["ModelListSelect"]
   }
 });
 
@@ -35140,6 +35244,114 @@ var render = function() {
   return _c(
     "div",
     [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          { staticClass: "col-sm-3" },
+          [
+            _c("p", { staticStyle: { color: "#00468b" } }, [
+              _vm._v("From Year")
+            ]),
+            _vm._v(" "),
+            _c("model-list-select", {
+              attrs: {
+                list: _vm.years.options,
+                "option-value": "value",
+                "option-text": "text",
+                placeholder: "Month"
+              },
+              model: {
+                value: _vm.years.item,
+                callback: function($$v) {
+                  _vm.$set(_vm.years, "item", $$v)
+                },
+                expression: "years.item"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-sm-3" },
+          [
+            _c("p", { staticStyle: { color: "#00468b" } }, [
+              _vm._v("From Month")
+            ]),
+            _vm._v(" "),
+            _c("model-list-select", {
+              attrs: {
+                list: _vm.months.options,
+                "option-value": "value",
+                "option-text": "text",
+                placeholder: "Month"
+              },
+              model: {
+                value: _vm.months.monthsFrom,
+                callback: function($$v) {
+                  _vm.$set(_vm.months, "monthsFrom", $$v)
+                },
+                expression: "months.monthsFrom"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-sm-3" },
+          [
+            _c("p", { staticStyle: { color: "#008b46" } }, [_vm._v("To Year")]),
+            _vm._v(" "),
+            _c("model-list-select", {
+              attrs: {
+                list: _vm.years.options,
+                "option-value": "value",
+                "option-text": "text",
+                placeholder: "Month"
+              },
+              model: {
+                value: _vm.years.item,
+                callback: function($$v) {
+                  _vm.$set(_vm.years, "item", $$v)
+                },
+                expression: "years.item"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-sm-3" },
+          [
+            _c("p", { staticStyle: { color: "#008b46" } }, [
+              _vm._v("To Month")
+            ]),
+            _vm._v(" "),
+            _c("model-list-select", {
+              attrs: {
+                list: _vm.months.options,
+                "option-value": "value",
+                "option-text": "text",
+                placeholder: "Month"
+              },
+              model: {
+                value: _vm.months.monthsTo,
+                callback: function($$v) {
+                  _vm.$set(_vm.months, "monthsTo", $$v)
+                },
+                expression: "months.monthsTo"
+              }
+            })
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
       _c("chart-component", {
         attrs: { chartData: _vm.data, options: _vm.options }
       }),
