@@ -25,7 +25,8 @@ window.Vue = require('vue');
 // Vue.config.silent = false;
 
 Vue.component('add-sale-component', require('./components/SaleAddComponent.vue').default);
-Vue.component('chart-component', require('./components/ChartComponent.vue').default);
+Vue.component('chart-bar-component', require('./components/ChartBarComponent.vue').default);
+Vue.component('chart-line-component', require('./components/ChartLineComponent.vue').default);
 Vue.component('chart', require('./Chart.vue').default);
 
 /**

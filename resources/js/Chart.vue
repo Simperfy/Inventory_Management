@@ -1,120 +1,49 @@
 <template>
     <div>
-        <div class="row">
-            <div class="col-sm-3">
-                <p style="color: #00468b">From Year</p>
-                <model-list-select :list="years.options"
-                                   v-model="years.item"
-                                   option-value="value"
-                                   option-text="text"
-                                   placeholder="Month">
-                </model-list-select>
+        <form action="/api/reports" method="get" @submit.prevent>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p style="color: #00468b">From</p>
+                    <datepicker :name="'dateFrom'" v-model="dateFrom" :calendar-button="true" :calendar-button-icon-content="'Date'" :typeable="true"></datepicker>
+                </div>
+                <div class="col-sm-3">
+                    <p style="color: #008b46">To</p>
+                    <datepicker :name="'dateTo'" v-model="dateTo" :calendar-button="true" :calendar-button-icon-content="'Date'" :typeable="true"></datepicker>
+                </div>
+                <div class="col-sm-3" style="padding-top: 25px">
+                    <button type="submit" class="btn btn-primary" @click="renderChart()">Go</button>
+                </div>
             </div>
-            <div class="col-sm-3">
-                <p style="color: #00468b">From Month</p>
-                <model-list-select :list="months.options"
-                                   v-model="months.monthsFrom"
-                                   option-value="value"
-                                   option-text="text"
-                                   placeholder="Month">
-                </model-list-select>
-            </div>
+        </form>
 
-            <div class="col-sm-3">
-                <p style="color: #008b46">To Year</p>
-                <model-list-select :list="years.options"
-                                   v-model="years.item"
-                                   option-value="value"
-                                   option-text="text"
-                                   placeholder="Month">
-                </model-list-select>
-            </div>
-            <div class="col-sm-3">
-                <p style="color: #008b46">To Month</p>
-                <model-list-select :list="months.options"
-                                   v-model="months.monthsTo"
-                                   option-value="value"
-                                   option-text="text"
-                                   placeholder="Month">
-                </model-list-select>
-            </div>
-        </div>
-
-        <chart-component :chartData="data" :options="options"></chart-component>
-        <button @click="fillData()" type="button">Click</button>
+        <chart-line-component :chartData="lineChartData"></chart-line-component>
+        <chart-bar-component :chartData="barChartData"></chart-bar-component>
         <p>Most Sold Item: {{mostSoldItem.name}} </p>
         <p>Profit : {{mostSoldItem.profit}} </p>
     </div>
 </template>
 
 <script>
-    import ChartComponent from './components/ChartComponent';
+    import ChartBarComponent from './components/ChartBarComponent';
+    import ChartLineComponent from './components/ChartLineComponent';
+    import Datepicker from 'vuejs-datepicker';
     import { ModelListSelect  } from 'vue-search-select';
+    import axios from 'axios';
     export default {
         data() {
             return {
-                years: {
-                    options: [
-                        {value:2019, text: '2019'},
-                        {value:2018, text: '2018'},
-                    ],
-                    item: {
-                        value: 2019,
-                        text: '2019',
-                    }
-                },
-                months: {
-                    options: [
-                        {value:'january', text: 'January'},
-                        {value:'february', text: 'February'},
-                        {value:'march', text: 'March'},
-                        {value:'april', text: 'April'},
-                        {value:'may', text: 'May'},
-                        {value:'june', text: 'June'},
-                        {value:'july', text: 'July'},
-                        {value:'august', text: 'August'},
-                        {value:'september', text: 'September'},
-                        {value:'october', text: 'October'},
-                        {value:'november', text: 'November'},
-                        {value:'december', text: 'December'},
-                    ],
-                    monthsFrom: {
-                        value: 'january',
-                        text: 'January',
-                    },
-                    monthsTo: {
-                        value: 'december',
-                        text: 'December',
-                    }
-                },
+                dateFrom: this.getFirstDateOfMonth(),
+                dateTo: this.getLastDateOfMonth(),
 
-                data: {
+                barChartData: {
                     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                     datasets: []
                 },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'Sales Report'
-                    },
 
-                    scales: {
-                        yAxes: [{
-                            stacked: true,
-                        }],
-                        xAxes: [{
-                            stacked: true,
-                            categoryPercentage: 0.5,
-                            barPercentage: 1
-                        }],
-                    },
-
-                    legend: {
-                        display: true,
-                    },
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
+                lineChartData: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    datasets: []
+                },
             }
         },
 
@@ -125,7 +54,7 @@
                     profit: 0
                 };
 
-                this.data.datasets.forEach(function(item) {
+                this.barChartData.datasets.forEach(function(item) {
                     let initialNum = 0;
                     let profitSum = item.data.reduce((accumulatedNum, currentNum) => accumulatedNum + currentNum, initialNum);
 
@@ -140,44 +69,98 @@
         },
 
         methods: {
-            fillData() {
-                // prepare data
-                let tempData = [
-                    {
-                        type: 'line',
-                        label: 'Expenses',
-                        backgroundColor: `rgb(255, 10, 0)`,
-                        fill: false,
-                        data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
+            getFirstDateOfMonth() {
+                let date = new Date();
+                return new Date(date.getFullYear(), date.getMonth(), 1);
+            },
+
+            getLastDateOfMonth() {
+                let date = new Date();
+                return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+            },
+
+            getData() {
+                let tempBarChartData, tempLineChartData;
+                // let self = this;
+                return axios.get('/api/reports', {
+                    params: {
+                        dateFrom: this.dateFrom,
+                        dateTo: this.dateTo
                     }
-                ];
+                }).then(response => {
+                    // console.log(response.data);
+                    let result = response.data;
+                    let barChartSales = [];
+                    let lineChartSales = [];
 
-                tempData[0].data = tempData[0].data.map(item => item * 2);
+                    let lineChartDataSaleItem = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // jan - dec
+                    let i = 100; // colors
 
-                for (let x = 0; x < 10; x++) {
-                    let r = Math.floor(Math.random() * 255);
-                    let g = Math.floor(Math.random() * 255);
-                    let b = Math.floor(Math.random() * 255);
+                    // loop through saleitems category object
+                    for(const key of Object.keys(result)) {
+                        // loop through arrays of sales
+                        let barChartDataSaleItem = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // jan - dec
+                        result[key].forEach(function (item, index) {
+                            // console.log(item.price);
+                            let date = new Date(item.created_at);
+                            let month = date.getMonth(); // January is 0, February is 1, and so on.
 
-                    tempData.push({
-                        type: 'bar',
-                        label: `Item ${x + 1}`,
-                        backgroundColor: `rgb(${r}, ${g}, ${b})`,
-                        data: [40, 20, 2*r, 39, 10, 40, 39, 80, 40, 20, 12, 11] // @todo remove "* r"
+                            barChartDataSaleItem[month] += item.price;
+                            lineChartDataSaleItem[month] += item.price;
+                        });
+
+                        // add profit per category for that month
+                        barChartSales.push({
+                            // type: 'bar',
+                            label: key,
+                            backgroundColor: `rgb(${i}, 0, 0)`,
+                            data: barChartDataSaleItem
+                        });
+                        if (i < 250) i += 50;
+                    }
+
+                    // sum of all profit for that month
+                    lineChartSales.push({
+                        // type: 'bar',
+                        // label: key,
+                        backgroundColor: `rgb(0, 130, 0)`,
+                        data: lineChartDataSaleItem
                     });
-                }
+                    console.log('linechart', lineChartSales);
 
-                // set data
-                this.data = {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                    datasets: tempData
-                }
+                    tempBarChartData = {
+                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                        datasets: barChartSales
+                    };
+
+                    tempLineChartData = {
+                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                        datasets: lineChartSales
+                    };
+
+                    return {tempBarChartData, tempLineChartData};
+
+                    }).catch(error => {
+                        console.log(error);
+                        alert(error);
+                    });
+            },
+
+            renderChart() {
+                this.getData().then(data => {
+                    this.barChartData = data.tempBarChartData;
+                    this.lineChartData = data.tempLineChartData;
+                });
+
+
             }
         },
 
         components: {
-            ChartComponent,
-            ModelListSelect
+            ChartBarComponent,
+            ChartLineComponent,
+            ModelListSelect,
+            Datepicker
         },
     }
 </script>

@@ -16,6 +16,9 @@ Route::get('/', function () {
 });
 
 //Route::post('/admin/sales/store', 'SalesController@store')->name('sales.store');
+Route::get('/dump', function(\Illuminate\Http\Request $request) {
+    return $request->all();
+});
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();

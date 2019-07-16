@@ -39,15 +39,15 @@ class SalesController extends Controller
                     ]);
 
                     $cs = $product->currentStock;
-                    if ($cs->remaining -= $cart['quantity'] < 0) {
-                        throw new OutOfStockException();
+                    if (($cs->remaining -= $cart['quantity']) < 0) {
+                        throw new OutOfStockException($product->name);
                     }
                     $cs->save();
                 }
 
             }, 5);
         } catch (OutOfStockException $e) {
-            return redirect()->back()->with(['message' => "Item Out Of Stock", 'alert-type' => 'error']);
+            return redirect()->back()->with(['message' => "{$e->getMessage()} Out Of Stock", 'alert-type' => 'error']);
         } catch (\Exception $e) {
             return redirect()->back()->with(['message' => $e->getMessage(), 'alert-type' => 'error']);
         }
