@@ -2,6 +2,11 @@
   <dictionary name="jc">
     <words>
       <w>datasets</w>
+      <w>datepicker</w>
+      <w>fdate</w>
+      <w>fmonth</w>
+      <w>tdate</w>
+      <w>tmonth</w>
     </words>
   </dictionary>
 </component>

@@ -27,6 +27,10 @@ Route::group(['prefix' => 'admin'], function () {
         return view('charts');
     })->name('admin.report');
 
+    Route::get('/print/barcode', function () {
+        return view('barcode');
+    })->name('admin.barcode');
+
     Route::post('stocks', ['uses' => 'StockController@store', 'as' => 'voyager.stocks.store']);
     Route::post('products', ['uses' => 'ProductController@store', 'as' => 'voyager.products.store']);
     Route::post('sales', 'SalesController@store')->name('voyager.sales.store');

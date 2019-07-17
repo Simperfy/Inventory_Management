@@ -27,6 +27,7 @@
         "chart.js": "^2.8.0",
         "vue-chartjs": "^3.4.2",
         "vue-search-select": "^2.8.3",
+        "vuedraggable": "^2.23.0",
         "vuejs-datepicker": "^1.6.2"
     }
 }

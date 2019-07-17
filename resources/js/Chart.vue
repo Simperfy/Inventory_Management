@@ -94,10 +94,12 @@
                     let lineChartSales = [];
 
                     let lineChartDataSaleItem = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // jan - dec
-                    let i = 100; // colors
 
                     // loop through saleitems category object
                     for(const key of Object.keys(result)) {
+                        let r = Math.floor(Math.random() * 255);
+                        let g = Math.floor(Math.random() * 255);
+                        let b = Math.floor(Math.random() * 255);
                         // loop through arrays of sales
                         let barChartDataSaleItem = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // jan - dec
                         result[key].forEach(function (item, index) {
@@ -113,10 +115,10 @@
                         barChartSales.push({
                             // type: 'bar',
                             label: key,
-                            backgroundColor: `rgb(${i}, 0, 0)`,
+                            backgroundColor: `rgb(${r}, ${g}, ${b})`,
                             data: barChartDataSaleItem
                         });
-                        if (i < 250) i += 50;
+
                     }
 
                     // sum of all profit for that month

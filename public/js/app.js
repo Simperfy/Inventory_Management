@@ -1792,13 +1792,14 @@ __webpack_require__.r(__webpack_exports__);
         var barChartSales = [];
         var lineChartSales = [];
         var lineChartDataSaleItem = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // jan - dec
-
-        var i = 100; // colors
         // loop through saleitems category object
 
         var _loop = function _loop() {
           var key = _Object$keys[_i];
-          // loop through arrays of sales
+          var r = Math.floor(Math.random() * 255);
+          var g = Math.floor(Math.random() * 255);
+          var b = Math.floor(Math.random() * 255); // loop through arrays of sales
+
           var barChartDataSaleItem = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // jan - dec
 
           result[key].forEach(function (item, index) {
@@ -1813,10 +1814,9 @@ __webpack_require__.r(__webpack_exports__);
           barChartSales.push({
             // type: 'bar',
             label: key,
-            backgroundColor: "rgb(".concat(i, ", 0, 0)"),
+            backgroundColor: "rgb(".concat(r, ", ").concat(g, ", ").concat(b, ")"),
             data: barChartDataSaleItem
           });
-          if (i < 250) i += 50;
         };
 
         for (var _i = 0, _Object$keys = Object.keys(result); _i < _Object$keys.length; _i++) {
