@@ -29,6 +29,8 @@ Vue.component('chart-bar-component', require('./components/ChartBarComponent.vue
 Vue.component('chart-line-component', require('./components/ChartLineComponent.vue').default);
 Vue.component('chart', require('./Chart.vue').default);
 
+Vue.component('barcodes', require('./Barcodes.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

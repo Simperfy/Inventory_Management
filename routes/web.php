@@ -15,10 +15,15 @@ Route::get('/', function () {
     return redirect(route('voyager.login'));
 });
 
-//Route::post('/admin/sales/store', 'SalesController@store')->name('sales.store');
-Route::get('/dump', function(\Illuminate\Http\Request $request) {
+// For Dumping requests
+/*Route::get('/dump', function(\Illuminate\Http\Request $request) {
     return $request->all();
-});
+});*/
+
+/*Route::get('/barcodes/print', function() {
+//    return view('barcodes-print');
+    return PDF::loadView('barcodes-print')->stream('test-file.pdf');
+});*/
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
@@ -27,9 +32,9 @@ Route::group(['prefix' => 'admin'], function () {
         return view('charts');
     })->name('admin.report');
 
-    Route::get('/print/barcode', function () {
-        return view('barcode');
-    })->name('admin.barcode');
+    Route::get('/barcodes', 'BarcodeController@create')->name('admin.barcodes');
+
+    Route::get('/barcodes/print', 'BarcodeController@print');
 
     Route::post('stocks', ['uses' => 'StockController@store', 'as' => 'voyager.stocks.store']);
     Route::post('products', ['uses' => 'ProductController@store', 'as' => 'voyager.products.store']);

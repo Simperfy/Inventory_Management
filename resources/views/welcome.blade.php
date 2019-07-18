@@ -16,12 +16,12 @@
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
-                height: 100vh;
+                height: 1500px;
                 margin: 0;
             }
 
             .full-height {
-                height: 100vh;
+                height: 1500px;
             }
 
             .flex-center {
@@ -61,6 +61,12 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+
+            .barcode-text {
+                margin: -5px 0 0 0;
+                color: black;
+                font-size: 12px;
+            }
         </style>
     </head>
     <body>
@@ -80,19 +86,48 @@
             @endif
 
             <div class="content">
-                <div class="title m-b-md">
-                    Laravel
+                <div style="margin-top: -40rem;">
+                    <p>code 128 - svg</p>
+                    {!! DNS1D::getBarcodeSVG("screw-000001", "C128", 1, 33,"black") !!}
+                    <p class="barcode-text">screw-000001</p>
                 </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                <div style="margin-top: 50px;">
+                    <p>code 128 - svg</p>
+                    {!! DNS1D::getBarcodeSVG("screw-000002", "C128", 1, 33,"black") !!}
+                    <p class="barcode-text">screw-000002</p>
                 </div>
+
+                <div style="margin-top: 50px;">
+                    <p>code 128 - svg</p>
+                    {!! DNS1D::getBarcodeSVG("screw-000003", "C128", 1, 33,"black") !!}
+                    <p class="barcode-text">screw-000003</p>
+                </div>
+
+                <div style="margin-top: 50px;">
+                    <p>code 128 - svg</p>
+                    {!! DNS1D::getBarcodeSVG("dogFood-000001", "C128", 1, 33,"black") !!}
+                    <p class="barcode-text">dogFood-000001</p>
+                </div>
+
+                <div style="margin-top: 50px;">
+                    <p>code 128 - svg</p>
+                    {!! DNS1D::getBarcodeSVG("dogFood-000002", "C128", 1, 33,"black") !!}
+                    <p class="barcode-text">dogFood-000002</p>
+                </div>
+
+                @for($x = 0; $x < 50; $x++)
+                    @if($x == 25)
+                        <br>
+                    @endif
+                <div style="margin-top: 50px;">
+                    <p>code 128 - svg</p>
+                    {!! DNS1D::getBarcodeSVG("dogFood-000003", "C128", 1, 33,"black") !!}
+                    <p class="barcode-text">dogFood-000003</p>
+                </div>
+                @endfor
+
+
             </div>
         </div>
     </body>
