@@ -11,8 +11,8 @@
                             <div class="col col-xs-8">
                                 <form class="form-inline" @submit.prevent>
                                     <div class="form-group">
-                                        <label for="itemToAdd">Item</label>
-                                        <input type="text" class="form-control" id="itemToAdd" v-model="current_name" placeholder="DogFood-000001">
+                                        <p style="display: inline">Barcode</p>
+                                        <product-selector @selected="onProductSelect" :clearData="clearOnAdd"></product-selector>
                                     </div>
                                     <div class="form-group">
                                         <label for="pcsToAdd">Quantity</label>
@@ -41,9 +41,7 @@
                                 <td align="center">
                                     <a class="btn btn-danger" @click="removeItem(item.id)"><i class="fa fa-trash-o"></i></a>
                                 </td>
-                                <!--<td>DogFood-000001</td>-->
                                 <td><input type="text" name="item[barcodes][]" :value="item.name" readonly style="border:white"></td>
-                                <!--<td>2</td>-->
                                 <td><input type="text" name="item[quantity][]" :value="item.quantity" readonly style="border:white"></td>
                             </tr>
                             </tbody>
@@ -58,29 +56,41 @@
 </template>
 
 <script>
+    import ProductSelector from './components/ProductSelector';
     export default {
+        components: {
+            ProductSelector
+        },
+
         data() {
             return {
-                id_counter: 2,
-                current_name: "",
+                id_counter: 1,
+                currentItemBarcode: null,
+                clearOnAdd: false,
                 current_quantity: 1,
                 items: [
-                    { id: 1, name: "DogFood-00001", quantity: 1 },
-                    { id: 2, name: "DogFood-00002", quantity: 1 },
                 ]
             };
         },
 
         methods: {
+            onProductSelect(item) {
+                this.currentItemBarcode = item.barcode;
+            },
+
+            // add item to table
             addItem() {
-                if (this.current_quantity > 0 && this.current_name !== "") {
-                    this.items.push( {id: this.id_counter, name: this.current_name, quantity: this.current_quantity} );
-                    this.current_name = "";
+                if (this.current_quantity > 0 && this.currentItemBarcode) {
+                    console.log('pass');
+                    this.items.push( {id: this.id_counter, name: this.currentItemBarcode, quantity: this.current_quantity} );
                     this.current_quantity = 1;
+                    this.currentItemBarcode = null;
                     this.id_counter++;
+                    this.clearOnAdd = !this.clearOnAdd; // doesn't matter if true or false, this is only used to trigger watch function on product selector
                 }
             },
 
+            // remove item from table
             removeItem(id) {
                 for (let i = 0; i < this.items.length; i++) {
                     if (this.items[i].id === id)

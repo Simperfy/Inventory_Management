@@ -14,8 +14,8 @@
                                            placeholder="item-000001">
                         </model-list-select>
 
-                        <!--<input type="text" class="form-control" placeholder="item-000001" v-model="cartItem" @keyup.enter="addBarcode(cartItem)">-->
-                        <button type="button" class="btn btn-primary" @click="addBarcode(cartItem)">Add Item</button>
+                        <!--<input type="text" class="form-control" placeholder="item-000001" v-model="cartItem" @keyup.enter="addItem(cartItem)">-->
+                        <button type="button" class="btn btn-primary" @click="addItem(cartItem)">Add Item</button>
                         <br>
                         <div class="form-group" :class="{'has-error': invalidAmount}">
                             <div class="input-group">
@@ -26,7 +26,7 @@
 
                         <h3 class="pull-right">Total: ₱{{ totalPrice }}</h3>
                     </form>
-                    <!--<input v-model="cartItem" @keyup.enter="addBarcode(cartItem)">-->
+                    <!--<input v-model="cartItem" @keyup.enter="addItem(cartItem)">-->
 
                     <table class="table table-hover">
                         <thead>
@@ -122,11 +122,15 @@
     import axios from 'axios';
     import { ModelListSelect  } from 'vue-search-select';
     export default {
+        components: {
+            ModelListSelect
+        },
+
         data() {
             return {
                 amountPaid: '',
-                cartItem: {},
-                cart: [],
+                cartItem: {}, // items in the current cart
+                cart: [], // items to be submitted on the form
                 inventory: [
                     // {barcode: 'screw-000001', price: 1000, text: 100, value: 100},
                     // {barcode: 'screw-000002', price: 2000, text: 100, value: 100},
@@ -140,8 +144,8 @@
             },
 
             // add Item to the cart
-            addBarcode(cartItem) {
-                cartItem = this.searchBarcode(cartItem.barcode);
+            addItem(cartItem) {
+                cartItem = this.verifyItem(cartItem.barcode); // check if item exists
 
                 if (cartItem) {
                     // console.log(cartItem);
@@ -152,8 +156,8 @@
                 }
             },
 
-            // search and return
-            searchBarcode(barcodeToSearch) {
+            // verify and return
+            verifyItem(barcodeToSearch) {
                 return this.inventory.find(function (item) {
                     if (item.barcode === barcodeToSearch) {
                         return item;
@@ -178,7 +182,7 @@
         watch: {
             // watch selected item
             cartItem: function () {
-                this.addBarcode(this.cartItem);
+                this.addItem(this.cartItem);
             },
         },
 
@@ -220,11 +224,5 @@
             });
             console.log('Component mounted.')
         },
-        created() {
-            console.log('created')
-        },
-        components: {
-            ModelListSelect
-        }
     }
 </script>
