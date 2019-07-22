@@ -34,7 +34,8 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('/barcodes', 'BarcodeController@create')->name('admin.barcodes');
 
-    Route::get('/barcodes/print', 'BarcodeController@print');
+//    Route::get('/barcodes/print', 'BarcodeController@print'); safe to delete
+    Route::post('/barcodes/print', 'BarcodeController@print');
 
     Route::post('stocks', ['uses' => 'StockController@store', 'as' => 'voyager.stocks.store']);
     Route::post('products', ['uses' => 'ProductController@store', 'as' => 'voyager.products.store']);

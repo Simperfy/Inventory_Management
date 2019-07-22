@@ -1,22 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head lang="en">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Type" content="text/html">
 
   <title>Barcodes</title>
 
   <!-- Styles -->
   <style>
-    html, body {
-      /*background-color: #fff;*/
-      /*color: #636b6f;*/
-      /*font-family: 'Nunito', sans-serif;
-      height: 1500px;
-      margin: 0;*/
-    }
-
     .barcodes-container {
       padding: 0 0;
     }
@@ -46,22 +37,41 @@
 </head>
 <body>
   <div class="barcodes-container">
-    @for($j=1; $j <= 10; $j++)
+    @php
+    $totalItems = count($itemBarcodes); // assuming both $itemBarcodes and $itemQuantity are the same size of array
+    $totalCounter = 0;
+    $itemsPerRow = 3;
+    @endphp
 
-    @if($j % 11 == 0) <div class="page-break"></div> @endif
-    <div class="barcodes-wrapper">
-      @for($x=0; $x < 4; $x++)
+    @for($i=0; $i < $totalItems; $i++)
+
+      @for($x=0; $x < $itemQuantity[$i]; $x++)
+        @if($totalCounter > 0)
+          @if($itemsPerRow === 3 && ($totalCounter % 27) === 0)
+          <div class="page-break"></div>
+          @endif
+        @endif
+
+      @php $totalCounter++; @endphp
+
+      @if($totalCounter == 1)<div class="barcodes-wrapper">@endif
       <div class="barcode-content">
         <div style="margin-top: 15px">
-          {{--<p>code 128 - png</p>--}}
-          <img src="data:image/png;base64,{{ DNS1D::getBarcodePNG('screw-000002', 'C128', 1, 33)}}" alt="">
-          <p class="barcode-text">screw-000002</p>
+          <!-- <p>code 128 - png</p> -->
+          <img src="data:image/png;base64,{{ DNS1D::getBarcodePNG($itemBarcodes[$i], 'C128', 1, 33)}}" alt="">
+          <p class="barcode-text">{{ $itemBarcodes[$i]}}</p>
         </div>
       </div>
+
+      @if(($totalCounter % $itemsPerRow) == 0)
+        </div>
+        <div class="barcodes-wrapper">
+      @endif
       @endfor
-    </div>
 
     @endfor
+        </div>
+
   </div>
 </body>
 </html>

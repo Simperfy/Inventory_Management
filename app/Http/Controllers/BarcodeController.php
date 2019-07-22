@@ -12,8 +12,18 @@ class BarcodeController extends Controller
         return view('barcodes');
     }
 
+    // @todo validate if $request->itemQuantity is a number
     public function print(Request $request)
     {
-        return PDF::loadView('barcodes-print')->stream('test-file.pdf');
+//        return view('barcodes-print', ['itemBarcodes' => $request->itemBarcodes, 'itemQuantity' => $request->itemQuantity]);
+        if (!$request->itemBarcodes || !$request->itemQuantity)
+            return redirect()->back()->with(['message' => 'Please Add Items First', 'alert-type' => 'error']);
+
+        if ( count($request->itemBarcodes) !== count($request->itemQuantity) )
+            return redirect()->back()->with(['message' => 'Items Indexes Doesn\'t match', 'alert-type' => 'error']);
+
+        return PDF::loadView('barcodes-print',
+            ['itemBarcodes' => $request->itemBarcodes, 'itemQuantity' => $request->itemQuantity]
+        )->stream('test-file.pdf');
     }
 }

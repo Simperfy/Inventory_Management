@@ -31,10 +31,16 @@
             }
         },
 
+        methods: {
+            addAll: function() {
+                this.$emit('addAll', this.inventory);
+            }
+        },
+
         watch: {
             // watch selected item
             cartItem: function () {
-                this.$emit('selected',this.cartItem);
+                this.$emit('selected', this.cartItem);
             },
 
             clearData: function () {

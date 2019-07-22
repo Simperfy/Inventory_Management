@@ -2,8 +2,8 @@
     <div>
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                Barcodes :)
-                <a href="/admin/barcodes/print">Sample Barcodes</a>
+                <!--Barcodes :)
+                <a :href="links.printBarcode">Sample Barcodes</a>-->
                 <div class="panel panel-default panel-table">
 
                     <div class="panel-heading">
@@ -12,41 +12,44 @@
                                 <form class="form-inline" @submit.prevent>
                                     <div class="form-group">
                                         <p style="display: inline">Barcode</p>
-                                        <product-selector @selected="onProductSelect" :clearData="clearOnAdd"></product-selector>
+                                        <product-selector @selected="onProductSelect" @addAll="onAddAll" :clearData="clearOnAdd"></product-selector>
                                     </div>
                                     <div class="form-group">
                                         <label for="pcsToAdd">Quantity</label>
                                         <input type="number" class="form-control" id="pcsToAdd" v-model="current_quantity" placeholder="1">
                                     </div>
                                     <button type="submit" class="btn btn-primary" @click="addItem()">ADD</button>
+                                    <a class="btn btn-link" style="color: blue; text-decoration:underline" @click="childAddAllItems()">ADD ALL</a>
                                 </form>
                             </div>
 
                             <div class="col col-xs-4 text-right">
-                                <button type="button" class="btn btn-sm btn-success">Download</button>
+                                <button type="button" class="btn btn-sm btn-success" @click="downloadForm()">Download</button>
                             </div>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <table class="table table-striped table-bordered table-list">
-                            <thead>
-                            <tr>
-                                <th><em class="fa fa-cog"></em></th>
-                                <th>Item</th>
-                                <th>Pcs</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="item in items" :key="item.id">
-                                <td align="center">
-                                    <a class="btn btn-danger" @click="removeItem(item.id)"><i class="fa fa-trash-o"></i></a>
-                                </td>
-                                <td><input type="text" name="item[barcodes][]" :value="item.name" readonly style="border:white"></td>
-                                <td><input type="text" name="item[quantity][]" :value="item.quantity" readonly style="border:white"></td>
-                            </tr>
-                            </tbody>
-                        </table>
-
+                        <form :action="links.printBarcode" method="POST" ref="printBarcodeForm">
+                            <slot></slot>
+                            <table class="table table-striped table-bordered table-list">
+                                <thead>
+                                <tr>
+                                    <th><em class="fa fa-cog"></em></th>
+                                    <th>Item</th>
+                                    <th>Pcs</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="item in items" :key="item.id">
+                                    <td align="center">
+                                        <a href="#" class="btn btn-danger" @click="removeItem(item.id)"><i class="fa fa-trash-o"></i></a>
+                                    </td>
+                                    <td><input type="text" name="itemBarcodes[]" :value="item.name" readonly style="border:white"></td>
+                                    <td><input type="text" name="itemQuantity[]" :value="item.quantity" readonly style="border:white"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
                     </div>
                 </div>
 
@@ -64,30 +67,57 @@
 
         data() {
             return {
+                links: {
+                    printBarcode: '/admin/barcodes/print'
+                },
+
                 id_counter: 1,
                 currentItemBarcode: null,
                 clearOnAdd: false,
                 current_quantity: 1,
                 items: [
+                    // {id: 2, name: 'scw-00001', quantity: 8},
+                    // {id: 3, name: 'dogFood-000001', quantity: 30}
                 ]
+
             };
         },
 
         methods: {
+            downloadForm() {
+                this.$refs.printBarcodeForm.submit();
+            },
+
+            // Event Listeners
+            onAddAll(inventory) {
+                let self = this;
+                inventory.forEach(function (item) {
+                    console.log(item.barcode);
+                    self.addItem(item.barcode, 1);
+                })
+            },
+
             onProductSelect(item) {
                 this.currentItemBarcode = item.barcode;
             },
+            // ./Event Listeners
 
             // add item to table
-            addItem() {
-                if (this.current_quantity > 0 && this.currentItemBarcode) {
+            addItem(itemBarcode = this.currentItemBarcode, itemQuantity = this.current_quantity) {
+                console.log('adding item');
+
+                if (itemQuantity > 0 && itemBarcode) {
                     console.log('pass');
-                    this.items.push( {id: this.id_counter, name: this.currentItemBarcode, quantity: this.current_quantity} );
+                    this.items.push( {id: this.id_counter, name: itemBarcode, quantity: itemQuantity} );
                     this.current_quantity = 1;
                     this.currentItemBarcode = null;
                     this.id_counter++;
                     this.clearOnAdd = !this.clearOnAdd; // doesn't matter if true or false, this is only used to trigger watch function on product selector
                 }
+            },
+
+            childAddAllItems() {
+                this.$children[0].addAll();
             },
 
             // remove item from table

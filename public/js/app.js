@@ -1755,6 +1755,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -1762,31 +1765,55 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      links: {
+        printBarcode: '/admin/barcodes/print'
+      },
       id_counter: 1,
       currentItemBarcode: null,
       clearOnAdd: false,
       current_quantity: 1,
-      items: []
+      items: [// {id: 2, name: 'scw-00001', quantity: 8},
+        // {id: 3, name: 'dogFood-000001', quantity: 30}
+      ]
     };
   },
   methods: {
+    downloadForm: function downloadForm() {
+      this.$refs.printBarcodeForm.submit();
+    },
+    // Event Listeners
+    onAddAll: function onAddAll(inventory) {
+      var self = this;
+      inventory.forEach(function (item) {
+        console.log(item.barcode);
+        self.addItem(item.barcode, 1);
+      });
+    },
     onProductSelect: function onProductSelect(item) {
       this.currentItemBarcode = item.barcode;
     },
+    // ./Event Listeners
     // add item to table
     addItem: function addItem() {
-      if (this.current_quantity > 0 && this.currentItemBarcode) {
+      var itemBarcode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.currentItemBarcode;
+      var itemQuantity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.current_quantity;
+      console.log('adding item');
+
+      if (itemQuantity > 0 && itemBarcode) {
         console.log('pass');
         this.items.push({
           id: this.id_counter,
-          name: this.currentItemBarcode,
-          quantity: this.current_quantity
+          name: itemBarcode,
+          quantity: itemQuantity
         });
         this.current_quantity = 1;
         this.currentItemBarcode = null;
         this.id_counter++;
         this.clearOnAdd = !this.clearOnAdd; // doesn't matter if true or false, this is only used to trigger watch function on product selector
       }
+    },
+    childAddAllItems: function childAddAllItems() {
+      this.$children[0].addAll();
     },
     // remove item from table
     removeItem: function removeItem(id) {
@@ -2110,6 +2137,11 @@ __webpack_require__.r(__webpack_exports__);
         // {barcode: 'screw-000002', price: 2000, text: 100, value: 100},
       ]
     };
+  },
+  methods: {
+    addAll: function addAll() {
+      this.$emit('addAll', this.inventory);
+    }
   },
   watch: {
     // watch selected item
@@ -36145,11 +36177,6 @@ var render = function() {
   return _c("div", [
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-md-10 col-md-offset-1" }, [
-        _vm._v("\n            Barcodes :)\n            "),
-        _c("a", { attrs: { href: "/admin/barcodes/print" } }, [
-          _vm._v("Sample Barcodes")
-        ]),
-        _vm._v(" "),
         _c("div", { staticClass: "panel panel-default panel-table" }, [
           _c("div", { staticClass: "panel-heading" }, [
             _c("div", { staticClass: "row" }, [
@@ -36175,7 +36202,10 @@ var render = function() {
                         _vm._v(" "),
                         _c("product-selector", {
                           attrs: { clearData: _vm.clearOnAdd },
-                          on: { selected: _vm.onProductSelect }
+                          on: {
+                            selected: _vm.onProductSelect,
+                            addAll: _vm.onAddAll
+                          }
                         })
                       ],
                       1
@@ -36225,69 +36255,115 @@ var render = function() {
                         }
                       },
                       [_vm._v("ADD")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn btn-link",
+                        staticStyle: {
+                          color: "blue",
+                          "text-decoration": "underline"
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.childAddAllItems()
+                          }
+                        }
+                      },
+                      [_vm._v("ADD ALL")]
                     )
                   ]
                 )
               ]),
               _vm._v(" "),
-              _vm._m(0)
+              _c("div", { staticClass: "col col-xs-4 text-right" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-sm btn-success",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.downloadForm()
+                      }
+                    }
+                  },
+                  [_vm._v("Download")]
+                )
+              ])
             ])
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "panel-body" }, [
             _c(
-              "table",
-              { staticClass: "table table-striped table-bordered table-list" },
+              "form",
+              {
+                ref: "printBarcodeForm",
+                attrs: { action: _vm.links.printBarcode, method: "POST" }
+              },
               [
-                _vm._m(1),
+                _vm._t("default"),
                 _vm._v(" "),
                 _c(
-                  "tbody",
-                  _vm._l(_vm.items, function(item) {
-                    return _c("tr", { key: item.id }, [
-                      _c("td", { attrs: { align: "center" } }, [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-danger",
-                            on: {
-                              click: function($event) {
-                                return _vm.removeItem(item.id)
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "fa fa-trash-o" })]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c("input", {
-                          staticStyle: { border: "white" },
-                          attrs: {
-                            type: "text",
-                            name: "item[barcodes][]",
-                            readonly: ""
-                          },
-                          domProps: { value: item.name }
-                        })
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c("input", {
-                          staticStyle: { border: "white" },
-                          attrs: {
-                            type: "text",
-                            name: "item[quantity][]",
-                            readonly: ""
-                          },
-                          domProps: { value: item.quantity }
-                        })
-                      ])
-                    ])
-                  }),
-                  0
+                  "table",
+                  {
+                    staticClass: "table table-striped table-bordered table-list"
+                  },
+                  [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c(
+                      "tbody",
+                      _vm._l(_vm.items, function(item) {
+                        return _c("tr", { key: item.id }, [
+                          _c("td", { attrs: { align: "center" } }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-danger",
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.removeItem(item.id)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "fa fa-trash-o" })]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("input", {
+                              staticStyle: { border: "white" },
+                              attrs: {
+                                type: "text",
+                                name: "itemBarcodes[]",
+                                readonly: ""
+                              },
+                              domProps: { value: item.name }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("input", {
+                              staticStyle: { border: "white" },
+                              attrs: {
+                                type: "text",
+                                name: "itemQuantity[]",
+                                readonly: ""
+                              },
+                              domProps: { value: item.quantity }
+                            })
+                          ])
+                        ])
+                      }),
+                      0
+                    )
+                  ]
                 )
-              ]
+              ],
+              2
             )
           ])
         ])
@@ -36296,18 +36372,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col col-xs-4 text-right" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-sm btn-success", attrs: { type: "button" } },
-        [_vm._v("Download")]
-      )
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

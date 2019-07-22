@@ -15,7 +15,7 @@
   <div class="page-content browse container-fluid">
     @include('voyager::alerts')
     <div class="row" id="app">
-        <barcodes></barcodes>
+        <barcodes>{{ csrf_field() }}</barcodes>
     </div>
   </div>
 
