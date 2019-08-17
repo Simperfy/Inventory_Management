@@ -55,10 +55,29 @@ class SalesController extends Controller
         return redirect(route('voyager.sales.index'))->with(['message' => "Successfully Added New Sales Record", 'alert-type' => 'success']);
     }
 
+    /*
+     * Revert sale items stock count when we delete them
+     */
     public function destroy(Sale $sale)
     {
-        $sale->saleItems()->delete();
-        $sale->delete();
+        // return dd($sale->saleItems()->first()->product->currentStock->remaining);
+
+        try {
+            DB::transaction(function () use ($sale) {
+                foreach($sale->saleItems as $saleItem) {
+                    $cs = $saleItem->product->currentStock;
+                    $cs->remaining += 1;
+                    $cs->save();
+                }
+
+                $sale->saleItems()->delete();
+                $sale->delete();
+
+            }, 5);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['message' => $e->getMessage(), 'alert-type' => 'error']);
+        }
+
         return redirect()->back()->with(['message' => "Successfully Deleted Sales Record", 'alert-type' => 'success']);
     }
 }
