@@ -39,6 +39,8 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::post('stocks', ['uses' => 'StockController@store', 'as' => 'voyager.stocks.store']);
     Route::post('products', ['uses' => 'ProductController@store', 'as' => 'voyager.products.store']);
+    Route::delete('products/{product}', ['uses' => 'ProductController@destroy', 'as' => 'voyager.products.destroy']);
+
     Route::post('sales', 'SalesController@store')->name('voyager.sales.store');
     Route::delete('sales/{sale}', ['uses' => 'SalesController@destroy', 'as' => 'voyager.sales.destroy']);
 });

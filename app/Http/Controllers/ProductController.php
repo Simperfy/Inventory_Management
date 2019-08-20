@@ -31,4 +31,25 @@ class ProductController extends Controller
         }
         return redirect()->back()->with(['message' => "Successfully Added Product", 'alert-type' => 'success']);
     }
+
+    public function destroy(Product $product) {
+
+        try {
+            DB::transaction(function () use ($product) {
+                foreach($product->stocks as $stock) { // delete all individual stock
+                    $stock->delete();
+                }
+
+                $product->currentStock->delete(); // delete total stock
+                $product->delete(); // delete product
+
+                // @todo add ability to delete sales items
+                // @todo consider NOT ADDING FEATURE TO DELETE A PRODUCT AS IT WILL BE CHAOTIC TO THE INVETONRY SYSTEM
+            }, 5);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['message' => $e->getMessage(), 'alert-type' => 'error']);
+        }
+
+        return redirect()->back()->with(['message' => "Successfully Deleted Product w/ stocks Record", 'alert-type' => 'success']);
+    }
 }

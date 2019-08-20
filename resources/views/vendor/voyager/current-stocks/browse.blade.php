@@ -7,9 +7,10 @@
   $stocks = currentStock::all();
   $total = 0;
   foreach($stocks as $stock) {
-    $total += $stock->remaining + $stock->product->price;
+    $total += $stock->remaining * $stock->product->price;
   }
 @endphp
+
 @section('page_header')
   <div class="container-fluid">
     <h1 class="page-title">

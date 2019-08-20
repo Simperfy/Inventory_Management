@@ -18,6 +18,7 @@ class StockController extends Controller
                     'quantity' => $request->quantity,
                     'product_id' => $request->product_id,
                     'supplier_id' => $request->supplier_id,
+                    'purchase_price' => $request->purchase_price,
                 ]);
 
                 $cs = CurrentStock::where('product_id', $request->product_id)->first();

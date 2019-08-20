@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $guarded = ['id'];
+
     public function saleItems()
     {
         return $this->hasMany('App\SaleItem');
@@ -14,6 +15,11 @@ class Product extends Model
 
     public function currentStock()
     {
-        return $this->hasOne('App\CurrentStock');
+        return $this->hasOne('App\CurrentStock'); // Total Stock items
+    }
+
+    public function stocks()
+    {
+        return $this->hasMany('App\Stock'); // Individual Stock items
     }
 }
